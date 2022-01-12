@@ -89,6 +89,13 @@ def time_sync():
         torch.cuda.synchronize()
     return time.time()
 
+def init_torch_seeds(seed=0):
+    # Speed-reproducibility tradeoff https://pytorch.org/docs/stable/notes/randomness.html
+    torch.manual_seed(seed)
+    if seed == 0:  # slower, more reproducible
+        cudnn.benchmark, cudnn.deterministic = False, True
+    else:  # faster, less reproducible
+        cudnn.benchmark, cudnn.deterministic = True, False
 
 def profile(input, ops, n=10, device=None):
     # YOLOv5 speed/memory/FLOPs profiler
