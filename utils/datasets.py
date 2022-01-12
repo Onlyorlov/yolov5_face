@@ -199,7 +199,7 @@ class LoadImages:  # for inference
 
 class LoadMaskedImages:
     # YOLOv5 image/video dataloader, i.e. `python detect.py --source image.jpg/vid.mp4`
-    def __init__(self, path, img_size=640, stride=32, mask=None, coef = 1, auto=True):
+    def __init__(self, path, img_size=640, mask=None, coef = 1, auto=True):
         p = str(Path(path).resolve())  # os-agnostic absolute path
         if '*' in p:
             files = sorted(glob.glob(p, recursive=True))  # glob
@@ -215,7 +215,6 @@ class LoadMaskedImages:
         ni, nv = len(images), len(videos)
 
         self.img_size = img_size
-        self.stride = stride
         self.files = images + videos
         self.nf = ni + nv  # number of files
         self.video_flag = [False] * ni + [True] * nv
@@ -275,9 +274,9 @@ class LoadMaskedImages:
             imgm = cv2.bitwise_and(img0, stencil)
 
             # Padded resize
-            img = letterbox(imgm, self.img_size, stride=self.stride, auto=self.auto)[0]
+            img = letterbox(imgm, new_shape=self.img_size)[0]
         else:
-            img = letterbox(img0, self.img_size, stride=self.stride, auto=self.auto)[0]
+            img = letterbox(img0, new_shape=self.img_size)[0]
 
         # Convert
         img = img.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
