@@ -54,7 +54,7 @@ def git_describe():
 def select_device(device='', batch_size=None):
     # device = 'cpu' or '0' or '0,1,2,3'
     s = f'YOLOv5 {git_describe()} torch {torch.__version__} '  # string
-    cpu = device.lower() == 'cpu'
+    cpu = device == 'cpu'
     if cpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
     elif device:  # non-cpu device requested
